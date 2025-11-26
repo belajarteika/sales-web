@@ -43,8 +43,14 @@ export default function Home() {
       // Found, redirect to dashboard
       const customer = data[0];
       router.push(`/dashboard/${customer.id}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      let message = "Terjadi kesalahan yang tidak diketahui";
+      if (err instanceof Error) {
+        message = err.message;
+      } else if (typeof err === "object" && err !== null && "message" in err) {
+        message = String((err as { message: unknown }).message);
+      }
+      setError(message);
     } finally {
       setLoading(false);
     }
